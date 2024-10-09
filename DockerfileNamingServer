@@ -1,0 +1,47 @@
+FROM golang:1.15.2
+
+ENV GOROOT /usr/local/go
+
+RUN go get google.golang.org/grpc
+RUN go get github.com/monmohan/xferspdy
+RUN go get github.com/golang/glog
+RUN go get cloud.google.com/go
+RUN go get google.golang.org/api
+RUN go get github.com/googleapis/gax-go
+RUN go get golang.org/x/oauth2
+RUN go get go.opencensus.io
+RUN go get github.com/golang/groupcache
+RUN go get github.com/google/btree
+RUN go get rsc.io/binaryregexp
+RUN go get github.com/google/martian
+RUN go get gopkg.in/yaml.v2
+RUN go get github.com/shurcooL/githubv4
+RUN go get github.com/shurcooL/graphql
+RUN go get gopkg.in/src-d/go-git.v4
+RUN go get -u github.com/sergi/go-diff/...
+RUN go get gopkg.in/src-d/go-billy.v4
+RUN go get github.com/src-d/gcfg
+RUN go get gopkg.in/warnings.v0
+RUN go get github.com/jbenet/go-context
+RUN go get -u github.com/emirpasic/gods/...
+RUN go get github.com/kevinburke/ssh_config
+RUN go get github.com/mitchellh/go-homedir
+RUN go get github.com/xanzy/ssh-agent
+RUN go get github.com/google/pprof
+RUN go get -u github.com/golang/mock/...
+RUN go get -u go4.org/...
+RUN go get github.com/envoyproxy/protoc-gen-validate
+RUN go get github.com/google/uuid
+RUN go get -u github.com/census-instrumentation/opencensus-proto/...
+RUN go get -u github.com/antlr/antlr4/...
+
+#ENV GOPATH /go/src/project-dfs
+ENV GOPATH /go
+
+WORKDIR /go/src/project-dfs
+COPY . .
+
+RUN go get -d -v ./... || true
+RUN go build -o NamingServer naming_server/main/main.go
+
+CMD ["./NamingServer"]

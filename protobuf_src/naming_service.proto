@@ -1,0 +1,143 @@
+syntax = 'proto3';
+package pb;
+option go_package = ".;pb";
+
+import "common.proto";
+
+
+service Naming {
+  // Registers storage server in the naming server.
+  rpc Register(RegRequest) returns (RegResponse) {}
+
+  // Creates a new file on 2 randomly selected storage servers.
+  rpc CreateFile(CreateFileRequest) returns (CreateFileResponse) {}
+
+  // Copies a file OR a directory (recursively) to 2 randomly selected storage servers.
+  // storage server is decided for each file separately.
+  rpc Copy(CopyRequest) returns (CopyResponse) {}
+
+  // Fetches the file index to obtain list of storage servers that hold the requested path.
+  rpc Discover(DiscoverRequest) returns (DiscoverResponse) {}
+
+  // Removes the file with specified name from the index and notifies storage servers about file removal.
+  rpc DeleteFile(DeleteRequest) returns (DeleteResponse) {}
+
+  // Removes the directory with specified name from the index and notifies storage servers about directory removal.
+  rpc DeleteDirectory(DeleteRequest) returns (DeleteResponse) {}
+
+  // Moves the file with the specified name in the index and notifies storage servers about file move.
+  rpc Move(MoveRequest) returns (MoveResponse) {}
+
+  // Creates a directory in the index and notifies storage servers about newly created directory.
+  rpc MakeDirectory(MakeDirectoryRequest) returns (MakeDirectoryResponse) {}
+
+  // Retrieves list of the directory contents from the index.
+  rpc ListDirectory(ListDirectoryRequest) returns (ListDirectoryResponse) {}
+}
+
+message DiscoverRequest {
+  string path = 1;
+  string excludeStorageName = 2;
+}
+
+message DiscoveredStorage {
+  string alias = 1;
+  string address = 2;
+  string publicAddress = 3;
+}
+
+message DiscoverResponse {
+  repeated DiscoveredStorage storageInfo = 1;
+}
+
+// ---
+
+message CreateFileRequest {
+  string path = 1;
+}
+
+message CreateFileResponse {
+  ErrorStatus errorStatus = 1;
+}
+
+// ---
+
+message CopyRequest {
+  string path = 1;
+  string newPath = 2;
+}
+
+message CopyResponse {
+  ErrorStatus errorStatus = 1;
+}
+
+// ---
+
+message RegRequest {
+  string serverAlias = 1;
+  uint32 port = 2;
+  string publicHostname = 3;
+}
+
+enum Status {
+  ACCEPT = 0;
+  DECLINE = 1;
+}
+
+message RegResponse {
+  Status status = 1;
+}
+
+// ---
+
+message DeleteRequest {
+  string path = 1;
+}
+
+message DeleteResponse {
+  ErrorStatus errorStatus = 1;
+}
+
+// ---
+
+message MoveRequest {
+  string path = 1;
+  string newPath = 2;
+}
+
+message MoveResponse {
+  ErrorStatus errorStatus = 1;
+}
+
+// ---
+
+message MakeDirectoryRequest {
+  string path = 1;
+}
+
+message MakeDirectoryResponse {
+  ErrorStatus errorStatus = 1;
+}
+
+// ---
+
+enum NodeMode {
+  REGULAR_FILE = 0;
+  DIRECTORY = 1;
+}
+
+message Node {
+  NodeMode mode = 1;
+  string name = 2;
+}
+
+message ListDirectoryRequest {
+  string path = 1;
+}
+
+message ListDirectoryResponse {
+  ErrorStatus errorStatus = 1;
+  repeated Node contents = 2;
+}
+
+

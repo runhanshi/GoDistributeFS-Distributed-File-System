@@ -1,0 +1,41 @@
+version: '3.3'
+
+networks:
+  main:
+
+services:
+  naming-server:
+    image: 'iammaxim/naming_server:latest'
+    networks:
+      - main
+    ports:
+      - 5678:5678
+    environment:
+      ADDRESS: 0.0.0.0:5678
+
+
+  storage-server-1:
+    image: 'iammaxim/storage_server:latest'
+    networks:
+      - main
+    ports:
+      - 1967:1967
+    environment:
+      NAMING_SERVER_ADDRESS: 'naming-server:5678'
+      ALIAS: 'storage01'
+      ADDRESS: 0.0.0.0:1967
+      PUBLIC_HOSTNAME: localhost
+
+  storage-server-2:
+    image: 'iammaxim/storage_server:latest'
+    networks:
+      - main
+    ports:
+      - 1968:1968
+    environment:
+      NAMING_SERVER_ADDRESS: 'naming-server:5678'
+      ALIAS: 'storage02'
+      ADDRESS: 0.0.0.0:1968
+      PUBLIC_HOSTNAME: localhost
+
+

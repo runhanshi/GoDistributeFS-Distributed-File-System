@@ -1,0 +1,109 @@
+syntax = 'proto3';
+package pb;
+option go_package = ".;pb";
+
+import "common.proto";
+
+
+service Storage {
+  //rpc AddStorage(AddRequest) returns (AddResponse) {}
+
+  rpc Initialize(InitializeArgs) returns (InitializeResult) {};
+  rpc CreateFile(CreateFileArgs) returns (CreateFileResult) {};
+  rpc ReadFile(ReadFileArgs) returns (ReadFileResult) {};
+  rpc WriteFile(WriteFileArgs) returns (WriteFileResult) {};
+  rpc Remove(RemoveArgs) returns (RemoveResult) {};
+  rpc GetFileInfo(GetFileInfoArgs) returns (GetFileInfoResult) {};
+  rpc Copy(CopyArgs) returns (CopyResult) {};
+  rpc Move(MoveArgs) returns (MoveResult) {};
+}
+
+// ---
+
+message InitializeArgs {
+}
+
+message InitializeResult {
+  ErrorStatus errorStatus = 1;
+  int64 availableSize = 2;
+}
+
+// ---
+
+message CreateFileArgs {
+  string path = 1;
+}
+
+message CreateFileResult {
+  ErrorStatus errorStatus = 1;
+}
+
+// ---
+
+message ReadFileArgs {
+  string path = 1;
+  int64 offset = 2;
+  int64 count = 3;
+}
+
+message ReadFileResult {
+  ErrorStatus errorStatus = 1;
+  bytes buffer = 2;
+  int32 count = 3;
+}
+
+// ---
+
+message WriteFileArgs {
+  string path = 1;
+  int64 offset = 2;
+  bytes buffer = 3;
+  bool isChainCall = 4;
+}
+
+message WriteFileResult {
+  ErrorStatus errorStatus = 1;
+}
+
+// ---
+
+message RemoveArgs {
+  string path = 1;
+}
+
+message RemoveResult {
+  ErrorStatus errorStatus = 1;
+}
+
+// ---
+
+message GetFileInfoArgs {
+  string path = 1;
+}
+
+message GetFileInfoResult {
+  ErrorStatus errorStatus = 1;
+  uint64 fileSize = 2;
+}
+
+// ---
+
+message CopyArgs {
+  string path = 1;
+  string newPath = 2;
+}
+
+message CopyResult {
+  ErrorStatus errorStatus = 1;
+}
+
+// ---
+
+message MoveArgs {
+  string path = 1;
+  string newPath = 2;
+}
+
+message MoveResult {
+  ErrorStatus errorStatus = 1;
+}
